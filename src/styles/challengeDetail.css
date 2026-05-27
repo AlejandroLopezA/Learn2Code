@@ -149,3 +149,15 @@
   background-color: #6366f1;
   color: white;
 }
+
+.result-box {
+  margin-top: 20px;
+
+  padding: 18px;
+
+  border-radius: 14px;
+
+  background-color: #f9fafb;
+
+  font-weight: 600;
+}

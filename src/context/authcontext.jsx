@@ -1,55 +1,79 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
 
-  const [user, setUser] = useState(null);
+  const storedUser = JSON.parse(
+    localStorage.getItem("user")
+  );
 
-  useEffect(() => {
-    const savedUser = localStorage.getItem("user");
+  const [user, setUser] = useState(
+    storedUser || null
+  );
 
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
-  }, []);
-
-  const login = (email, password) => {
-
-    const fakeUser = {
-      username: "Alejandro",
-      email: email,
-      points: 0,
-    };
-
-    setUser(fakeUser);
+  const login = (userData) => {
 
     localStorage.setItem(
       "user",
-      JSON.stringify(fakeUser)
+      JSON.stringify(userData)
     );
+
+    setUser(userData);
   };
 
-  const register = (username, email, password) => {
+  const register = (userData) => {
 
-    const fakeUser = {
-      username,
-      email,
+    const newUser = {
+      ...userData,
+
       points: 0,
-    };
 
-    setUser(fakeUser);
+      completedChallenges: []
+    };
 
     localStorage.setItem(
       "user",
-      JSON.stringify(fakeUser)
+      JSON.stringify(newUser)
     );
+
+    setUser(newUser);
   };
 
   const logout = () => {
-    setUser(null);
 
     localStorage.removeItem("user");
+
+    setUser(null);
+  };
+
+  const completeChallenge = (challenge) => {
+
+    if (
+      user.completedChallenges.includes(challenge.id)
+    ) {
+      return;
+    }
+
+    const updatedUser = {
+
+      ...user,
+
+      points:
+        user.points + challenge.points,
+
+      completedChallenges: [
+        ...user.completedChallenges,
+        challenge.id
+      ]
+    };
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify(updatedUser)
+    );
+
+    setUser(updatedUser);
   };
 
   return (
@@ -59,9 +83,12 @@ export function AuthProvider({ children }) {
         login,
         register,
         logout,
+        completeChallenge
       }}
     >
+
       {children}
+
     </AuthContext.Provider>
   );
 }

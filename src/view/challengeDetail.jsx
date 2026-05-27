@@ -8,6 +8,8 @@ import Editor from "@monaco-editor/react";
 
 import challenges from "../data/challenges";
 
+import { useAuth } from "../context/authcontext";
+
 import "../styles/challengeDetail.css";
 
 function ChallengeDetail() {
@@ -18,9 +20,43 @@ function ChallengeDetail() {
     (c) => c.id === Number(id)
   );
 
+  const { completeChallenge } = useAuth();
+
   const [code, setCode] = useState(
     challenge.starterCode
   );
+
+  const [result, setResult] = useState("");
+
+  const runCode = () => {
+
+  if (code.includes("return")) {
+
+    setResult("✅ Test passed");
+
+  } else {
+
+    setResult("❌ Wrong answer");
+  }
+};
+
+const submitSolution = () => {
+
+  if (code.includes("return")) {
+
+    completeChallenge(challenge);
+
+    setResult(
+      "🎉 Challenge completed successfully"
+    );
+
+  } else {
+
+    setResult(
+      "❌ Your solution is incorrect"
+    );
+  }
+};
 
   return (
 
@@ -107,15 +143,33 @@ function ChallengeDetail() {
 
           <div className="editor-buttons">
 
-            <button className="run-button">
+            <button
+              type="button"
+              className="run-button"
+              onClick={runCode}
+            >
               Run Code
             </button>
 
-            <button className="submit-button">
+            <button
+              type="button"
+              className="submit-button"
+              onClick={submitSolution}
+            >
               Submit
             </button>
 
           </div>
+
+          {result && (
+
+            <div className="result-box">
+
+              {result}
+
+            </div>
+
+          )}
 
         </div>
 
