@@ -1,7 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
+
 import { useState } from "react";
 
 import { useAuth } from "../context/authcontext";
+
 import "../styles/auth.css";
 
 function Login() {
@@ -11,25 +13,35 @@ function Login() {
   const { login } = useAuth();
 
   const [email, setEmail] = useState("");
+
   const [password, setPassword] = useState("");
 
   const handleSubmit = (e) => {
+
     e.preventDefault();
 
-    login(email, password);
+    login({
+      username: "Alejandro",
+      email,
+      points: 0,
+      completedChallenges: []
+    });
 
     navigate("/");
   };
 
   return (
+
     <div className="auth-container">
 
       <div className="auth-left">
+
         <h1>Learn2Code</h1>
 
         <p>
           Improve your programming skills solving coding challenges.
         </p>
+
       </div>
 
       <div className="auth-right">
@@ -64,6 +76,7 @@ function Login() {
           </button>
 
           <p>
+
             Don't have an account?{" "}
 
             <Link to="/register">

@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+
 import { useState } from "react";
 
 import { useAuth } from "../context/authcontext";
@@ -21,12 +22,16 @@ function Register() {
 
     e.preventDefault();
 
-    register(username, email, password);
+    register({
+      username,
+      email
+    });
 
     navigate("/");
   };
 
   return (
+
     <div className="auth-container">
 
       <div className="auth-left">
@@ -80,6 +85,7 @@ function Register() {
           </button>
 
           <p>
+
             Already have an account?{" "}
 
             <Link to="/login">

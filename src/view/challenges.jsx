@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
 
+import { useAuth } from "../context/authcontext";
+
 import challenges from "../data/challenges";
 
 import "../styles/challenges.css";
 
 function Challenges() {
+
+  const { user } = useAuth();
 
   return (
 
@@ -12,7 +16,9 @@ function Challenges() {
 
       <div className="page-header">
 
-        <h1>Coding Challenges</h1>
+        <h1>
+          Coding Challenges
+        </h1>
 
         <p>
           Improve your programming skills solving challenges
@@ -27,26 +33,52 @@ function Challenges() {
           <Link
             key={challenge.id}
             to={`/challenges/${challenge.id}`}
-            className="challenge-card"
+            className={`challenge-card ${
+              user.completedChallenges.includes(challenge.id)
+                ? "completed"
+                : ""
+            }`}
           >
 
-            <div className="card-top">
+            <div className="card-content">
 
-              <h2>
-                {challenge.title}
-              </h2>
+              <div className="card-top">
 
-              <span
-                className={`difficulty ${challenge.difficulty}`}
-              >
-                {challenge.difficulty}
-              </span>
+                <h2>
+                  {challenge.title}
+                </h2>
+
+                <span
+                  className={`difficulty ${challenge.difficulty}`}
+                >
+                  {challenge.difficulty}
+                </span>
+
+              </div>
+
+              <p>
+                {challenge.description}
+              </p>
+
+              <div className="card-bottom">
+
+                <span>
+                  {challenge.points} points
+                </span>
+
+              </div>
 
             </div>
 
-            <p>
-              {challenge.points} points
-            </p>
+            {user.completedChallenges.includes(challenge.id) && (
+
+              <div className="completed-overlay">
+
+                ✓ Completed
+
+              </div>
+
+            )}
 
           </Link>
 
