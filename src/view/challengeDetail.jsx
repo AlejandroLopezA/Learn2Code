@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { Link, useParams } from "react-router-dom";
 
@@ -22,41 +22,106 @@ function ChallengeDetail() {
 
   const { completeChallenge } = useAuth();
 
-  const [code, setCode] = useState(
-    challenge.starterCode
-  );
+  const [language, setLanguage] =
+    useState("javascript");
 
-  const [result, setResult] = useState("");
+  const storageKey =
+    `challenge-${challenge.id}-${language}`;
+
+  const templates = {
+
+    javascript:
+`function twoSum(nums, target) {
+
+}`,
+    python:
+`def two_sum(nums, target):
+
+    pass`,
+
+    java:
+`class Solution {
+
+    public int[] twoSum(int[] nums, int target) {
+
+    }
+
+}`,
+
+    cpp:
+`class Solution {
+public:
+
+    vector<int> twoSum(vector<int>& nums, int target) {
+
+    }
+
+};`
+  };
+
+  const [code, setCode] = useState(() => {
+
+    const savedCode =
+      localStorage.getItem(storageKey);
+
+    return (
+      savedCode ||
+      templates[language]
+    );
+  });
+
+  const [result, setResult] =
+    useState("");
+
+  const [output, setOutput] =
+    useState("");
+
+  useEffect(() => {
+
+    localStorage.setItem(
+      storageKey,
+      code
+    );
+
+  }, [code, storageKey]);
 
   const runCode = () => {
 
-  if (code.includes("return")) {
+    if (code.includes("return")) {
 
-    setResult("✅ Test passed");
+      setResult("✅ Test passed");
 
-  } else {
+      setOutput("[0,1]");
 
-    setResult("❌ Wrong answer");
-  }
-};
+    } else {
 
-const submitSolution = () => {
+      setResult("❌ Wrong answer");
 
-  if (code.includes("return")) {
+      setOutput("undefined");
+    }
+  };
 
-    completeChallenge(challenge);
+  const submitSolution = () => {
 
-    setResult(
-      "🎉 Challenge completed successfully"
-    );
+    if (code.includes("return")) {
 
-  } else {
+      completeChallenge(challenge);
 
-    setResult(
-      "❌ Your solution is incorrect"
-    );
-  }
-};
+      setResult(
+        "🎉 Challenge completed successfully"
+      );
+
+      setOutput("[0,1]");
+
+    } else {
+
+      setResult(
+        "❌ Your solution is incorrect"
+      );
+
+      setOutput("undefined");
+    }
+  };
 
   return (
 
@@ -131,14 +196,119 @@ const submitSolution = () => {
 
         <div className="editor-section">
 
+          <div className="editor-header">
+
+            <button
+              className={
+                language === "javascript"
+                  ? "active-language"
+                  : ""
+              }
+              onClick={() => {
+
+                setLanguage("javascript");
+
+                const savedCode =
+                  localStorage.getItem(
+                    `challenge-${challenge.id}-javascript`
+                  );
+
+                setCode(
+                  savedCode ||
+                  templates.javascript
+                );
+              }}
+            >
+              JavaScript
+            </button>
+
+            <button
+              className={
+                language === "python"
+                  ? "active-language"
+                  : ""
+              }
+              onClick={() => {
+
+                setLanguage("python");
+
+                const savedCode =
+                  localStorage.getItem(
+                    `challenge-${challenge.id}-python`
+                  );
+
+                setCode(
+                  savedCode ||
+                  templates.python
+                );
+              }}
+            >
+              Python
+            </button>
+
+            <button
+              className={
+                language === "java"
+                  ? "active-language"
+                  : ""
+              }
+              onClick={() => {
+
+                setLanguage("java");
+
+                const savedCode =
+                  localStorage.getItem(
+                    `challenge-${challenge.id}-java`
+                  );
+
+                setCode(
+                  savedCode ||
+                  templates.java
+                );
+              }}
+            >
+              Java
+            </button>
+
+            <button
+              className={
+                language === "cpp"
+                  ? "active-language"
+                  : ""
+              }
+              onClick={() => {
+
+                setLanguage("cpp");
+
+                const savedCode =
+                  localStorage.getItem(
+                    `challenge-${challenge.id}-cpp`
+                  );
+
+                setCode(
+                  savedCode ||
+                  templates.cpp
+                );
+              }}
+            >
+              C++
+            </button>
+
+          </div>
+
           <Editor
             height="500px"
-            defaultLanguage="javascript"
+            language={language}
             theme="vs-dark"
             value={code}
             onChange={(value) =>
               setCode(value)
             }
+            options={{
+              minimap: {
+                enabled: false
+              }
+            }}
           />
 
           <div className="editor-buttons">
@@ -163,13 +333,64 @@ const submitSolution = () => {
 
           {result && (
 
-            <div className="result-box">
+            <div
+              className={`result-box ${
+                result.includes("passed") ||
+                result.includes("completed")
+                  ? "success"
+                  : "error"
+              }`}
+            >
 
               {result}
 
             </div>
 
           )}
+
+          <div className="testcases-panel">
+
+            <h3>
+              Test Cases
+            </h3>
+
+            <div className="testcase-box">
+
+              <span className="label">
+                Input
+              </span>
+
+              <pre>
+                {challenge.testCases?.[0]?.input}
+              </pre>
+
+            </div>
+
+            <div className="testcase-box">
+
+              <span className="label">
+                Expected Output
+              </span>
+
+              <pre>
+                {challenge.testCases?.[0]?.expected}
+              </pre>
+
+            </div>
+
+            <div className="testcase-box">
+
+              <span className="label">
+                Your Output
+              </span>
+
+              <pre>
+                {output}
+              </pre>
+
+            </div>
+
+          </div>
 
         </div>
 

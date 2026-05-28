@@ -1,0 +1,127 @@
+.ranking-page {
+  padding-bottom: 50px;
+}
+
+.ranking-header {
+  margin-bottom: 40px;
+}
+
+.ranking-header h1 {
+  font-size: 48px;
+
+  margin-bottom: 10px;
+}
+
+.ranking-header p {
+  color: #6b7280;
+
+  font-size: 18px;
+}
+
+.ranking-table {
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+}
+
+.ranking-row {
+  background-color: white;
+
+  border-radius: 22px;
+
+  padding: 24px 30px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  transition: 0.2s;
+}
+
+.ranking-row:hover {
+  transform: translateY(-3px);
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+.current-user {
+  border: 2px solid #6366f1;
+}
+
+.ranking-left {
+  display: flex;
+  align-items: center;
+
+  gap: 20px;
+}
+
+.ranking-position {
+  font-size: 24px;
+  font-weight: bold;
+
+  color: #6b7280;
+
+  width: 50px;
+}
+
+.ranking-avatar {
+  width: 55px;
+  height: 55px;
+
+  border-radius: 50%;
+
+  background-color: #6366f1;
+
+  color: white;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.ranking-left h3 {
+  font-size: 22px;
+
+  margin-bottom: 5px;
+}
+
+.ranking-points {
+  font-size: 22px;
+  font-weight: bold;
+
+  color: #111827;
+
+  width: 120px;
+
+  text-align: right;
+}
+
+.you-badge {
+  background-color: #eef2ff;
+  color: #4338ca;
+
+  padding: 4px 10px;
+
+  border-radius: 999px;
+
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.ranking-right {
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+}
+
+.difficulty-stats {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+}

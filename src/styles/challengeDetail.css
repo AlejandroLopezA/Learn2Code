@@ -31,7 +31,7 @@
 
   gap: 30px;
 
-  padding-bottom: 50px;
+  align-items: start;
 }
 
 .challenge-info {
@@ -39,7 +39,11 @@
 
   border-radius: 24px;
 
-  padding: 40px;
+  padding: 28px;
+
+  border: 1px solid #e5e7eb;
+
+  height: fit-content;
 }
 
 .challenge-header {
@@ -65,6 +69,10 @@
   align-items: center;
 
   gap: 15px;
+}
+
+.editor-section {
+  min-width: 0;
 }
 
 .points {
@@ -118,6 +126,41 @@
   padding: 20px;
 }
 
+.editor-header {
+  display: flex;
+
+  gap: 10px;
+
+  margin-bottom: 15px;
+}
+
+.editor-header button {
+  border: none;
+
+  background-color: #f3f4f6;
+
+  padding: 10px 18px;
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  transition: 0.2s;
+}
+
+.editor-header button:hover {
+  background-color: #e5e7eb;
+}
+
+.active-language {
+  background-color: #6366f1 !important;
+
+  color: white;
+}
+
 .editor-buttons {
   display: flex;
   justify-content: flex-end;
@@ -160,4 +203,49 @@
   background-color: #f9fafb;
 
   font-weight: 600;
+}
+
+.testcases-panel {
+  margin-top: 30px;
+
+  background-color: #111827;
+
+  border-radius: 18px;
+
+  padding: 25px;
+}
+
+.testcases-panel h3 {
+  color: white;
+
+  margin-bottom: 20px;
+}
+
+.testcase-box {
+  background-color: #1f2937;
+
+  padding: 18px;
+
+  border-radius: 14px;
+
+  margin-bottom: 15px;
+}
+
+.label {
+  display: block;
+
+  color: #9ca3af;
+
+  margin-bottom: 10px;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.testcase-box pre {
+  color: white;
+
+  white-space: pre-wrap;
+
+  line-height: 1.6;
 }
