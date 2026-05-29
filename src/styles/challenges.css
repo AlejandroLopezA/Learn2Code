@@ -155,3 +155,79 @@
 .completed:hover .completed-overlay {
   opacity: 0;
 }
+
+.search-input {
+  flex: 1;
+
+  height: 52px;
+
+  padding: 0 18px;
+
+  margin-top: 0;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 14px;
+
+  font-size: 15px;
+
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: #6366f1;
+}
+
+.filters-row {
+  display: flex;
+
+  align-items: stretch;
+
+  gap: 15px;
+
+  margin-top: 20px;
+}
+
+.search-input {
+  flex: 1;
+}
+
+.difficulty-filters {
+  display: flex;
+
+  align-items: stretch;
+
+  gap: 10px;
+}
+
+.filter {
+  width: 42px;
+
+  height: 42px;
+
+  border-radius: 12px;
+
+  border: 2px solid transparent;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.easy-filter {
+  background-color: #50d37e;
+}
+
+.medium-filter {
+  background-color: #f8da61;
+}
+
+.hard-filter {
+  background-color: #e04e4e;
+}
+
+.selected {
+  border-color: #111827;
+
+  transform: scale(1.05);
+}

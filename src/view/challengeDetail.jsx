@@ -123,6 +123,19 @@ public:
     }
   };
 
+  const resetCode = () => {
+
+  localStorage.removeItem(storageKey);
+
+  setCode(
+    templates[language]
+  );
+
+  setResult("");
+
+  setOutput("");
+};
+
   return (
 
     <div>
@@ -198,100 +211,111 @@ public:
 
           <div className="editor-header">
 
-            <button
-              className={
-                language === "javascript"
-                  ? "active-language"
-                  : ""
-              }
-              onClick={() => {
+            <div className="language-tabs">
 
-                setLanguage("javascript");
+              <button
+                className={
+                  language === "javascript"
+                    ? "active-language"
+                    : ""
+                }
+                onClick={() => {
 
-                const savedCode =
-                  localStorage.getItem(
-                    `challenge-${challenge.id}-javascript`
+                  setLanguage("javascript");
+
+                  const savedCode =
+                    localStorage.getItem(
+                      `challenge-${challenge.id}-javascript`
+                    );
+
+                  setCode(
+                    savedCode ||
+                    templates.javascript
                   );
+                }}
+              >
+                JavaScript
+              </button>
 
-                setCode(
-                  savedCode ||
-                  templates.javascript
-                );
-              }}
-            >
-              JavaScript
-            </button>
+              <button
+                className={
+                  language === "python"
+                    ? "active-language"
+                    : ""
+                }
+                onClick={() => {
+
+                  setLanguage("python");
+
+                  const savedCode =
+                    localStorage.getItem(
+                      `challenge-${challenge.id}-python`
+                    );
+
+                  setCode(
+                    savedCode ||
+                    templates.python
+                  );
+                }}
+              >
+                Python
+              </button>
+
+              <button
+                className={
+                  language === "java"
+                    ? "active-language"
+                    : ""
+                }
+                onClick={() => {
+
+                  setLanguage("java");
+
+                  const savedCode =
+                    localStorage.getItem(
+                      `challenge-${challenge.id}-java`
+                    );
+
+                  setCode(
+                    savedCode ||
+                    templates.java
+                  );
+                }}
+              >
+                Java
+              </button>
+
+              <button
+                className={
+                  language === "cpp"
+                    ? "active-language"
+                    : ""
+                }
+                onClick={() => {
+
+                  setLanguage("cpp");
+
+                  const savedCode =
+                    localStorage.getItem(
+                      `challenge-${challenge.id}-cpp`
+                    );
+
+                  setCode(
+                    savedCode ||
+                    templates.cpp
+                  );
+                }}
+              >
+                C++
+              </button>
+
+            </div>
 
             <button
-              className={
-                language === "python"
-                  ? "active-language"
-                  : ""
-              }
-              onClick={() => {
-
-                setLanguage("python");
-
-                const savedCode =
-                  localStorage.getItem(
-                    `challenge-${challenge.id}-python`
-                  );
-
-                setCode(
-                  savedCode ||
-                  templates.python
-                );
-              }}
+              className="reset-button"
+              onClick={resetCode}
             >
-              Python
-            </button>
-
-            <button
-              className={
-                language === "java"
-                  ? "active-language"
-                  : ""
-              }
-              onClick={() => {
-
-                setLanguage("java");
-
-                const savedCode =
-                  localStorage.getItem(
-                    `challenge-${challenge.id}-java`
-                  );
-
-                setCode(
-                  savedCode ||
-                  templates.java
-                );
-              }}
-            >
-              Java
-            </button>
-
-            <button
-              className={
-                language === "cpp"
-                  ? "active-language"
-                  : ""
-              }
-              onClick={() => {
-
-                setLanguage("cpp");
-
-                const savedCode =
-                  localStorage.getItem(
-                    `challenge-${challenge.id}-cpp`
-                  );
-
-                setCode(
-                  savedCode ||
-                  templates.cpp
-                );
-              }}
-            >
-              C++
+              Reset Code
             </button>
 
           </div>
