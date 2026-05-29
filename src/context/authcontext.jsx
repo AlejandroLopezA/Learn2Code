@@ -17,58 +17,43 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] =
     useState(true);
 
-useEffect(() => {
-
-  supabase.auth.getSession()
-    .then(({ data: { session } }) => {
-
-      if (session) {
-
-        setUser({
-          email: session.user.email,
-
-          username:
-            session.user.email
-              .split("@")[0],
-
-          points: 0,
-
-          completedChallenges: []
-        });
-      }
-
-      setLoading(false);
-    });
-
-  const {
-    data: { subscription }
-  } = supabase.auth.onAuthStateChange(
-    (_event, session) => {
-
-      if (session) {
-
-        setUser({
-          email: session.user.email,
-
-          username:
-            session.user.email
-              .split("@")[0],
-
-          points: 0,
-
-          completedChallenges: []
-        });
-
-      } else {
-
-        setUser(null);
-      }
-    }
+    
+  console.log(
+    "AUTH RENDER",
+    { user, loading }
   );
 
-  return () => {
-    subscription.unsubscribe();
+useEffect(() => {
+
+  const loadUser = async () => {
+
+    const {
+      data: { session }
+    } = await supabase.auth.getSession();
+
+    if (session) {
+
+      const { data: profile } =
+        await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", session.user.id)
+          .single();
+
+      if (profile) {
+
+        setUser({
+          ...profile,
+            completedChallenges:
+              profile.completed_challenges || []
+        });
+      }
+    }
+
+    setLoading(false);
   };
+
+  loadUser();
 
 }, []);
 
@@ -109,34 +94,59 @@ useEffect(() => {
     setUser(null);
   };
 
-  const completeChallenge = (challenge) => {
+const completeChallenge = async (
+  challenge
+) => {
 
-    if (
-      user.completedChallenges.includes(challenge.id)
-    ) {
-      return;
-    }
+  console.log("USER:", user);
+  console.log("USER ID:", user?.id);
 
-    const updatedUser = {
+  if (
+    user.completedChallenges.includes(
+      challenge.id
+    )
+  ) {
+    return;
+  }
 
-      ...user,
+  const updatedChallenges = [
+    ...user.completedChallenges,
+    challenge.id
+  ];
 
-      points:
-        user.points + challenge.points,
+  const newPoints =
+    user.points + challenge.points;
 
-      completedChallenges: [
-        ...user.completedChallenges,
-        challenge.id
-      ]
-    };
+  const { error } =
+    await supabase
+      .from("profiles")
+      .update({
+        points: newPoints,
 
-    localStorage.setItem(
-      "user",
-      JSON.stringify(updatedUser)
-    );
+        completed_challenges:
+          updatedChallenges
+      })
+      .eq("id", user.id);
 
-    setUser(updatedUser);
+  if (error) {
+
+    console.log(error);
+
+    return;
+  }
+
+  const updatedUser = {
+
+    ...user,
+
+    points: newPoints,
+
+    completedChallenges:
+      updatedChallenges
   };
+
+  setUser(updatedUser);
+};
 
   return (
     <AuthContext.Provider

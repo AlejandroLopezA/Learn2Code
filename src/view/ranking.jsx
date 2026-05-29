@@ -1,3 +1,7 @@
+import { useState, useEffect } from "react";
+
+import { supabase } from "../lib/supabase";
+
 import { useAuth } from "../context/authcontext";
 
 import challenges from "../data/challenges";
@@ -8,11 +12,66 @@ function Ranking() {
 
   const { user } = useAuth();
 
+  const [ranking, setRanking] =
+  useState([]);
+
+  useEffect(() => {
+
+  const loadRanking = async () => {
+
+    const { data, error } =
+      await supabase
+        .from("profiles")
+        .select("*")
+        .order("points", {
+          ascending: false
+        });
+
+    if (!error) {
+
+      const rankingData = data.map(player => {
+
+        const completed =
+          player.completed_challenges || [];
+
+        const completedChallengesData =
+          challenges.filter(challenge =>
+            completed.includes(challenge.id)
+          );
+
+        return {
+
+          ...player,
+
+          easy:
+            completedChallengesData.filter(
+              c => c.difficulty === "easy"
+            ).length,
+
+          medium:
+            completedChallengesData.filter(
+              c => c.difficulty === "medium"
+            ).length,
+
+          hard:
+            completedChallengesData.filter(
+              c => c.difficulty === "hard"
+            ).length
+        };
+      });
+
+      setRanking(rankingData);
+    }
+  };
+
+  loadRanking();
+
+}, []);
+
   const completedChallengesData =
     challenges.filter((challenge) =>
-      user.completedChallenges.includes(
-        challenge.id
-      )
+      (user?.completedChallenges || [])
+        .includes(challenge.id)
     );
 
   const easyCount =
@@ -33,72 +92,7 @@ function Ranking() {
         challenge.difficulty === "hard"
     ).length;
 
-  const fakeUsers = [
 
-    {
-      username: "Maria",
-      points: 2400,
-
-      easy: 12,
-      medium: 5,
-      hard: 2
-    },
-
-    {
-      username: "David",
-      points: 2100,
-
-      easy: 10,
-      medium: 4,
-      hard: 1
-    },
-
-    {
-      username: "Lucas",
-      points: 1800,
-
-      easy: 8,
-      medium: 3,
-      hard: 1
-    },
-
-    {
-      username: "Sofia",
-      points: 1500,
-
-      easy: 7,
-      medium: 2,
-      hard: 0
-    },
-
-    {
-      username: "Emma",
-      points: 1200,
-
-      easy: 5,
-      medium: 1,
-      hard: 0
-    }
-
-  ];
-
-  const ranking = [
-    ...fakeUsers,
-
-    {
-      username: user.username,
-
-      points: user.points,
-
-      easy: easyCount,
-      medium: mediumCount,
-      hard: hardCount,
-
-      currentUser: true
-    }
-
-  ]
-    .sort((a, b) => b.points - a.points);
 
   return (
 
@@ -123,7 +117,7 @@ function Ranking() {
           <div
             key={index}
             className={`ranking-row ${
-              player.currentUser
+              player.id === user?.id
                 ? "current-user"
                 : ""
             }`}
@@ -149,7 +143,7 @@ function Ranking() {
                   {player.username}
                 </h3>
 
-                {player.currentUser && (
+                {player.id === user?.id && (
                   <span className="you-badge">
                     You
                   </span>

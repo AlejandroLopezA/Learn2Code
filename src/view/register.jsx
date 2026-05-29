@@ -41,14 +41,19 @@ function Register() {
 
     });
 
-    if (error) {
+  if (error) {
 
-      alert(error.message);
+    alert(error.message);
 
-      return;
-    }
+    return;
+  }
 
-    await supabase.from("profiles").insert({
+  console.log("USER ID:", data.user.id);
+  
+  const { error: profileError } =
+  await supabase
+    .from("profiles")
+    .insert({
 
       id: data.user.id,
 
@@ -60,12 +65,19 @@ function Register() {
 
     });
 
-    alert(
-      "Account created successfully. Check your email if confirmation is enabled."
-    );
+console.log("PROFILE ERROR:", profileError);
 
-    navigate("/login");
-  };
+  if (profileError) {
+
+    alert(profileError.message);
+
+    return;
+  }
+
+  alert("Account created successfully");
+
+  navigate("/login");
+};
 
   return (
 

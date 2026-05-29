@@ -18,32 +18,35 @@ function Login() {
 
   const handleSubmit = async (e) => {
 
-  e.preventDefault();
+    e.preventDefault();
 
-  const { data, error } =
-    await supabase.auth.signInWithPassword({
+    try {
 
-      email,
+      const { data, error } =
+        await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
 
-      password
+      console.log("DATA:", data);
+      console.log("ERROR:", error);
 
-    });
+      if (error) {
 
-  console.log("DATA:", data);
+        alert(error.message);
 
-  console.log("ERROR:", error);
+        return;
+      }
 
-  if (error) {
+      window.location.href = "/";
 
-    alert(error.message);
+    } catch (err) {
 
-    return;
-  }
+      console.error(err);
 
-  alert("Login correcto");
-  console.log("NAVEGANDO");
-  navigate("/");
-};
+      alert("Error al iniciar sesión");
+    }
+  };
 
   return (
 
