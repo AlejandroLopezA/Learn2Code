@@ -1,4 +1,6 @@
-import { createContext, useContext, useState } from "react";
+import {createContext, useContext, useState, useEffect} from "react";
+
+import { supabase } from "../lib/supabase";
 
 const AuthContext = createContext();
 
@@ -11,6 +13,34 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(
     storedUser || null
   );
+
+  useEffect(() => {
+
+  const getSession = async () => {
+
+    const {
+      data: { session }
+    } = await supabase.auth.getSession();
+
+    if (session) {
+
+      setUser({
+        email: session.user.email,
+
+        username:
+          session.user.email
+            .split("@")[0],
+
+        points: 0,
+
+        completedChallenges: []
+      });
+    }
+  };
+
+  getSession();
+
+}, []);
 
   const login = (userData) => {
 
@@ -40,7 +70,9 @@ export function AuthProvider({ children }) {
     setUser(newUser);
   };
 
-  const logout = () => {
+  const logout = async () => {
+
+    await supabase.auth.signOut();
 
     localStorage.removeItem("user");
 

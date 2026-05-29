@@ -2,6 +2,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { useState } from "react";
 
+import { supabase } from "../lib/supabase";
+
 import { useAuth } from "../context/authcontext";
 
 import "../styles/auth.css";
@@ -18,16 +20,31 @@ function Register() {
 
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
 
-    e.preventDefault();
+  e.preventDefault();
 
-    register({
-      username,
-      email
+  const { data, error } =
+    await supabase.auth.signUp({
+
+      email,
+
+      password
+
     });
 
-    navigate("/");
+    if (error) {
+
+      alert(error.message);
+
+      return;
+    }
+
+    alert(
+      "Account created successfully. Check your email if confirmation is enabled."
+    );
+
+    navigate("/login");
   };
 
   return (

@@ -2,6 +2,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { useState } from "react";
 
+import { supabase } from "../lib/supabase";
+
 import { useAuth } from "../context/authcontext";
 
 import "../styles/auth.css";
@@ -10,25 +12,38 @@ function Login() {
 
   const navigate = useNavigate();
 
-  const { login } = useAuth();
-
   const [email, setEmail] = useState("");
 
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
 
-    e.preventDefault();
+  e.preventDefault();
 
-    login({
-      username: "Alejandro",
+  const { data, error } =
+    await supabase.auth.signInWithPassword({
+
       email,
-      points: 0,
-      completedChallenges: []
+
+      password
+
     });
 
-    navigate("/");
-  };
+  console.log("DATA:", data);
+
+  console.log("ERROR:", error);
+
+  if (error) {
+
+    alert(error.message);
+
+    return;
+  }
+
+  alert("Login correcto");
+
+  navigate("/");
+};
 
   return (
 
