@@ -12,8 +12,6 @@ function Register() {
 
   const navigate = useNavigate();
 
-  const { register } = useAuth();
-
   const [username, setUsername] = useState("");
 
   const [email, setEmail] = useState("");
@@ -29,7 +27,17 @@ function Register() {
 
       email,
 
-      password
+      password,
+
+      options: {
+
+        data: {
+
+          username
+
+        }
+
+      }
 
     });
 
@@ -39,6 +47,18 @@ function Register() {
 
       return;
     }
+
+    await supabase.from("profiles").insert({
+
+      id: data.user.id,
+
+      username,
+
+      email,
+
+      points: 0
+
+    });
 
     alert(
       "Account created successfully. Check your email if confirmation is enabled."

@@ -1,14 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-import {
-  Code2,
-  Trophy,
-  User,
-  House,
-  LogOut,
-  LogIn,
-  UserPlus,
-} from "lucide-react";
+import { Code2, Trophy, User, House, LogOut, LogIn, UserPlus} from "lucide-react";
 
 import { useAuth } from "../context/authcontext";
 

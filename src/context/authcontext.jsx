@@ -14,31 +14,61 @@ export function AuthProvider({ children }) {
     storedUser || null
   );
 
-  useEffect(() => {
+  const [loading, setLoading] =
+    useState(true);
 
-  const getSession = async () => {
+useEffect(() => {
 
-    const {
-      data: { session }
-    } = await supabase.auth.getSession();
+  supabase.auth.getSession()
+    .then(({ data: { session } }) => {
 
-    if (session) {
+      if (session) {
 
-      setUser({
-        email: session.user.email,
+        setUser({
+          email: session.user.email,
 
-        username:
-          session.user.email
-            .split("@")[0],
+          username:
+            session.user.email
+              .split("@")[0],
 
-        points: 0,
+          points: 0,
 
-        completedChallenges: []
-      });
+          completedChallenges: []
+        });
+      }
+
+      setLoading(false);
+    });
+
+  const {
+    data: { subscription }
+  } = supabase.auth.onAuthStateChange(
+    (_event, session) => {
+
+      if (session) {
+
+        setUser({
+          email: session.user.email,
+
+          username:
+            session.user.email
+              .split("@")[0],
+
+          points: 0,
+
+          completedChallenges: []
+        });
+
+      } else {
+
+        setUser(null);
+      }
     }
-  };
+  );
 
-  getSession();
+  return () => {
+    subscription.unsubscribe();
+  };
 
 }, []);
 
@@ -112,6 +142,7 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider
       value={{
         user,
+        loading,
         login,
         register,
         logout,

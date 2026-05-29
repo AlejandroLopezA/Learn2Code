@@ -41,7 +41,7 @@ function Login() {
   }
 
   alert("Login correcto");
-
+  console.log("NAVEGANDO");
   navigate("/");
 };
 
