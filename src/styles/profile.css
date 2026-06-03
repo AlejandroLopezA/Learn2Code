@@ -8,7 +8,7 @@
 }
 
 .profile-header {
-  background-color: white;
+  background-color: var(--surface);
 
   border-radius: 24px;
 
@@ -18,6 +18,8 @@
   align-items: center;
 
   gap: 30px;
+
+  border: 1px solid var(--border);
 }
 
 .profile-avatar {
@@ -26,9 +28,9 @@
 
   border-radius: 50%;
 
-  background-color: #6366f1;
+  background-color: var(--accent);
 
-  color: white;
+  color: var(--accent-contrast);
 
   display: flex;
   justify-content: center;
@@ -45,7 +47,7 @@
 }
 
 .profile-header p {
-  color: #6b7280;
+  color: var(--muted);
 }
 
 .profile-stats {
@@ -57,13 +59,15 @@
 }
 
 .profile-card {
-  background-color: white;
+  background-color: var(--surface);
 
   padding: 40px;
 
   border-radius: 24px;
 
   text-align: center;
+
+  border: 1px solid var(--border);
 }
 
 .profile-card h2 {
@@ -73,7 +77,7 @@
 }
 
 .profile-card p {
-  color: #6b7280;
+  color: var(--muted);
 }
 
 .completed-section h2 {
@@ -91,13 +95,13 @@
 }
 
 .completed-card {
-  background-color: white;
+  background-color: var(--surface);
 
   padding: 25px;
 
   border-radius: 20px;
 
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
 }
 
 .completed-card h3 {

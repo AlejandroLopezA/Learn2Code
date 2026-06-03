@@ -13,7 +13,7 @@
 }
 
 .ranking-header p {
-  color: #6b7280;
+  color: var(--muted);
 
   font-size: 18px;
 }
@@ -26,7 +26,7 @@
 }
 
 .ranking-row {
-  background-color: white;
+  background-color: var(--surface);
 
   border-radius: 22px;
 
@@ -37,16 +37,18 @@
   align-items: center;
 
   transition: 0.2s;
+
+  border: 1px solid var(--border);
 }
 
 .ranking-row:hover {
   transform: translateY(-3px);
 
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-soft);
 }
 
 .current-user {
-  border: 2px solid #6366f1;
+  border: 2px solid var(--accent);
 }
 
 .ranking-left {
@@ -60,7 +62,7 @@
   font-size: 24px;
   font-weight: bold;
 
-  color: #6b7280;
+  color: var(--muted);
 
   width: 50px;
 }
@@ -71,9 +73,9 @@
 
   border-radius: 50%;
 
-  background-color: #6366f1;
+  background-color: var(--accent);
 
-  color: white;
+  color: var(--accent-contrast);
 
   display: flex;
   justify-content: center;
@@ -93,7 +95,7 @@
   font-size: 22px;
   font-weight: bold;
 
-  color: #111827;
+  color: var(--text);
 
   width: 120px;
 
@@ -101,8 +103,8 @@
 }
 
 .you-badge {
-  background-color: #eef2ff;
-  color: #4338ca;
+  background-color: var(--surface-strong);
+  color: var(--accent-hover);
 
   padding: 4px 10px;
 

@@ -1,16 +1,14 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { useState } from "react";
 
 import { supabase } from "../lib/supabase";
 
-import { useAuth } from "../context/authcontext";
+import ThemeToggle from "../components/themeToggle";
 
 import "../styles/auth.css";
 
 function Login() {
-
-  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
 
@@ -51,6 +49,12 @@ function Login() {
   return (
 
     <div className="auth-container">
+
+      <div className="auth-theme-action">
+
+        <ThemeToggle />
+
+      </div>
 
       <div className="auth-left">
 

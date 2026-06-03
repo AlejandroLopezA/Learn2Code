@@ -5,7 +5,7 @@
   align-items: center;
   gap: 10px;
 
-  background-color: white;
+  background-color: var(--surface);
 
   padding: 14px 20px;
 
@@ -16,12 +16,14 @@
   font-weight: 600;
 
   transition: 0.2s;
+
+  border: 1px solid var(--border);
 }
 
 .back-button:hover {
-  background-color: #eef2ff;
+  background-color: var(--surface-strong);
 
-  color: #4338ca;
+  color: var(--accent);
 }
 
 .challenge-detail-page {
@@ -35,13 +37,13 @@
 }
 
 .challenge-info {
-  background-color: white;
+  background-color: var(--surface);
 
   border-radius: 24px;
 
   padding: 28px;
 
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
 
   height: fit-content;
 }
@@ -61,7 +63,7 @@
 }
 
 .challenge-header p {
-  color: #6b7280;
+  color: var(--muted);
 }
 
 .challenge-meta {
@@ -76,8 +78,8 @@
 }
 
 .points {
-  background-color: #eef2ff;
-  color: #4338ca;
+  background-color: var(--surface-strong);
+  color: var(--accent-hover);
 
   padding: 8px 14px;
 
@@ -93,13 +95,13 @@
 .challenge-description p {
   line-height: 1.8;
 
-  color: #374151;
+  color: var(--muted);
 
   margin-bottom: 30px;
 }
 
 .example-box {
-  background-color: #f9fafb;
+  background-color: var(--surface-soft);
 
   padding: 25px;
 
@@ -117,13 +119,15 @@
 }
 
 .editor-section {
-  background-color: white;
+  background-color: var(--surface);
 
   border-radius: 24px;
 
   overflow: hidden;
 
   padding: 20px;
+
+  border: 1px solid var(--border);
 }
 
 .editor-header {
@@ -139,7 +143,8 @@
 .editor-header button {
   border: none;
 
-  background-color: #f3f4f6;
+  background-color: var(--surface-soft);
+  color: var(--text);
 
   padding: 10px 18px;
 
@@ -151,16 +156,20 @@
   font-weight: 600;
 
   transition: 0.2s;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .editor-header button:hover {
-  background-color: #e5e7eb;
+  background-color: var(--surface-strong);
 }
 
 .active-language {
-  background-color: #6366f1 !important;
+  background-color: var(--accent) !important;
 
-  color: white;
+  color: var(--accent-contrast) !important;
 }
 
 .editor-buttons {
@@ -184,15 +193,27 @@
   font-weight: bold;
 
   cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.run-button:disabled,
+.submit-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
 }
 
 .run-button {
-  background-color: #e5e7eb;
+  background-color: var(--surface-soft);
+  color: var(--text);
 }
 
 .submit-button {
-  background-color: #6366f1;
-  color: white;
+  background-color: var(--accent);
+  color: var(--accent-contrast);
 }
 
 .result-box {
@@ -202,9 +223,57 @@
 
   border-radius: 14px;
 
-  background-color: #f9fafb;
+  background-color: var(--surface-soft);
 
   font-weight: 600;
+}
+
+.result-box.success {
+  background-color: var(--success-bg);
+  color: var(--success-text);
+  border: 1px solid color-mix(
+    in srgb,
+    var(--success-text) 45%,
+    transparent
+  );
+}
+
+.result-box.error {
+  background-color: var(--danger-bg);
+  color: var(--danger-text);
+  border: 1px solid color-mix(
+    in srgb,
+    var(--danger-text) 45%,
+    transparent
+  );
+}
+
+.feedback-panel {
+  margin-top: 16px;
+}
+
+.feedback-panel label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.feedback-panel textarea {
+  width: 100%;
+  min-height: 130px;
+  resize: vertical;
+  border: 1px solid color-mix(
+    in srgb,
+    var(--danger-text) 45%,
+    transparent
+  );
+  border-radius: 12px;
+  padding: 14px;
+  background-color: var(--danger-bg);
+  color: var(--danger-text);
+  font: inherit;
+  line-height: 1.6;
 }
 
 .testcases-panel {
@@ -250,4 +319,16 @@
   white-space: pre-wrap;
 
   line-height: 1.6;
+}
+
+@media (max-width: 980px) {
+  .challenge-detail-page {
+    grid-template-columns: 1fr;
+  }
+
+  .challenge-header,
+  .editor-header,
+  .editor-buttons {
+    flex-wrap: wrap;
+  }
 }

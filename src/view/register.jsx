@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { supabase } from "../lib/supabase";
 
-import { useAuth } from "../context/authcontext";
+import ThemeToggle from "../components/themeToggle";
 
 import "../styles/auth.css";
 
@@ -82,6 +82,12 @@ console.log("PROFILE ERROR:", profileError);
   return (
 
     <div className="auth-container">
+
+      <div className="auth-theme-action">
+
+        <ThemeToggle />
+
+      </div>
 
       <div className="auth-left">
 

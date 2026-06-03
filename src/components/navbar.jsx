@@ -4,6 +4,8 @@ import { Code2, Trophy, User, House, LogOut, LogIn, UserPlus} from "lucide-react
 
 import { useAuth } from "../context/authcontext";
 
+import ThemeToggle from "./themeToggle";
+
 import "../styles/navbar.css";
 
 function Navbar() {
@@ -39,6 +41,8 @@ function Navbar() {
       </div>
 
       <nav>
+
+        <ThemeToggle />
 
         {user ? (
           <>

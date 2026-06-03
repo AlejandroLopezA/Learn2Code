@@ -1,8 +1,13 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { Link, useParams } from "react-router-dom";
 
-import { ArrowLeft } from "lucide-react";
+import {
+  ArrowLeft,
+  Play,
+  RotateCcw,
+  Send,
+} from "lucide-react";
 
 import Editor from "@monaco-editor/react";
 
@@ -26,11 +31,12 @@ function ChallengeDetail() {
     useState("javascript");
 
   const storageKey =
-    `challenge-${challenge.id}-${language}`;
+    `challenge-${challenge?.id || "missing"}-${language}`;
 
   const templates = {
 
     javascript:
+      challenge?.starterCode ||
 `function twoSum(nums, target) {
 
 }`,
@@ -76,6 +82,15 @@ public:
   const [output, setOutput] =
     useState("");
 
+  const [feedback, setFeedback] =
+    useState("");
+
+  const [isSuccess, setIsSuccess] =
+    useState(false);
+
+  const [isChecking, setIsChecking] =
+    useState(false);
+
   useEffect(() => {
 
     localStorage.setItem(
@@ -85,56 +100,135 @@ public:
 
   }, [code, storageKey]);
 
+  const loadTemplate = (nextLanguage) => {
+
+    setLanguage(nextLanguage);
+
+    const savedCode =
+      localStorage.getItem(
+        `challenge-${challenge.id}-${nextLanguage}`
+      );
+
+    setCode(
+      savedCode ||
+      templates[nextLanguage]
+    );
+
+    setResult("");
+    setOutput("");
+    setFeedback("");
+    setIsSuccess(false);
+  };
+
+  const checkSolution = async (completeOnSuccess) => {
+
+    setIsChecking(true);
+    setResult("");
+    setOutput("");
+    setFeedback("");
+    setIsSuccess(false);
+
+    try {
+
+      const response = await fetch("/api/check-solution", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          challenge: {
+            title: challenge.title,
+            description: challenge.description,
+            example: challenge.example,
+            testCases: challenge.testCases || []
+          },
+          language,
+          code
+        })
+      });
+
+      const review = await response.json();
+
+      setOutput(review.output || "");
+      setFeedback(review.feedback || "");
+      setIsSuccess(Boolean(review.correct));
+
+      if (review.correct) {
+
+        if (completeOnSuccess) {
+
+          await completeChallenge(challenge);
+        }
+
+        setResult("Lo has hecho bien");
+
+      } else {
+
+        setResult("Hay algo que corregir");
+      }
+
+    } catch {
+
+      setResult("Hay algo que corregir");
+      setFeedback(
+        "No se ha podido conectar con la correccion. Comprueba que la app esta arrancada con OPENAI_API_KEY configurada."
+      );
+      setIsSuccess(false);
+
+    } finally {
+
+      setIsChecking(false);
+    }
+  };
+
   const runCode = () => {
 
-    if (code.includes("return")) {
-
-      setResult("✅ Test passed");
-
-      setOutput("[0,1]");
-
-    } else {
-
-      setResult("❌ Wrong answer");
-
-      setOutput("undefined");
-    }
+    checkSolution(false);
   };
 
   const submitSolution = () => {
 
-    if (code.includes("return")) {
-
-      completeChallenge(challenge);
-
-      setResult(
-        "🎉 Challenge completed successfully"
-      );
-
-      setOutput("[0,1]");
-
-    } else {
-
-      setResult(
-        "❌ Your solution is incorrect"
-      );
-
-      setOutput("undefined");
-    }
+    checkSolution(true);
   };
 
   const resetCode = () => {
 
-  localStorage.removeItem(storageKey);
+    localStorage.removeItem(storageKey);
 
-  setCode(
-    templates[language]
-  );
+    setCode(
+      templates[language]
+    );
 
-  setResult("");
+    setResult("");
+    setOutput("");
+    setFeedback("");
+    setIsSuccess(false);
+  };
 
-  setOutput("");
-};
+  if (!challenge) {
+
+    return (
+
+      <div className="missing-challenge">
+
+        <Link
+          to="/challenges"
+          className="back-button"
+        >
+
+          <ArrowLeft size={18} />
+
+          Back to Challenges
+
+        </Link>
+
+        <h1>
+          Challenge not found
+        </h1>
+
+      </div>
+    );
+  }
 
   return (
 
@@ -219,20 +313,9 @@ public:
                     ? "active-language"
                     : ""
                 }
-                onClick={() => {
-
-                  setLanguage("javascript");
-
-                  const savedCode =
-                    localStorage.getItem(
-                      `challenge-${challenge.id}-javascript`
-                    );
-
-                  setCode(
-                    savedCode ||
-                    templates.javascript
-                  );
-                }}
+                onClick={() =>
+                  loadTemplate("javascript")
+                }
               >
                 JavaScript
               </button>
@@ -243,20 +326,9 @@ public:
                     ? "active-language"
                     : ""
                 }
-                onClick={() => {
-
-                  setLanguage("python");
-
-                  const savedCode =
-                    localStorage.getItem(
-                      `challenge-${challenge.id}-python`
-                    );
-
-                  setCode(
-                    savedCode ||
-                    templates.python
-                  );
-                }}
+                onClick={() =>
+                  loadTemplate("python")
+                }
               >
                 Python
               </button>
@@ -267,20 +339,9 @@ public:
                     ? "active-language"
                     : ""
                 }
-                onClick={() => {
-
-                  setLanguage("java");
-
-                  const savedCode =
-                    localStorage.getItem(
-                      `challenge-${challenge.id}-java`
-                    );
-
-                  setCode(
-                    savedCode ||
-                    templates.java
-                  );
-                }}
+                onClick={() =>
+                  loadTemplate("java")
+                }
               >
                 Java
               </button>
@@ -291,20 +352,9 @@ public:
                     ? "active-language"
                     : ""
                 }
-                onClick={() => {
-
-                  setLanguage("cpp");
-
-                  const savedCode =
-                    localStorage.getItem(
-                      `challenge-${challenge.id}-cpp`
-                    );
-
-                  setCode(
-                    savedCode ||
-                    templates.cpp
-                  );
-                }}
+                onClick={() =>
+                  loadTemplate("cpp")
+                }
               >
                 C++
               </button>
@@ -315,6 +365,7 @@ public:
               className="reset-button"
               onClick={resetCode}
             >
+              <RotateCcw size={16} />
               Reset Code
             </button>
 
@@ -341,15 +392,19 @@ public:
               type="button"
               className="run-button"
               onClick={runCode}
+              disabled={isChecking}
             >
-              Run Code
+              <Play size={18} />
+              {isChecking ? "Checking..." : "Run Code"}
             </button>
 
             <button
               type="button"
               className="submit-button"
               onClick={submitSolution}
+              disabled={isChecking}
             >
+              <Send size={18} />
               Submit
             </button>
 
@@ -359,14 +414,29 @@ public:
 
             <div
               className={`result-box ${
-                result.includes("passed") ||
-                result.includes("completed")
-                  ? "success"
-                  : "error"
+                isSuccess ? "success" : "error"
               }`}
             >
 
               {result}
+
+            </div>
+
+          )}
+
+          {feedback && !isSuccess && (
+
+            <div className="feedback-panel">
+
+              <label htmlFor="solution-feedback">
+                Que has hecho mal
+              </label>
+
+              <textarea
+                id="solution-feedback"
+                value={feedback}
+                readOnly
+              />
 
             </div>
 
